@@ -1,4 +1,4 @@
-1.За допомогою download.file() завантажте любий excel файл з порталу http://data.gov.ua та зчитайте його (xls, xlsx – бінарні формати, тому встановить mode = “wb”. Виведіть перші 6 строк отриманого фрейму даних.
+
 
 ```r
 >install.packages("rJava")
@@ -40,4 +40,42 @@ downloaded 27 KB
 5    дог. 10 від 16.02.2017  5460.0
 6 фоп-000012 від 01.02.2017 20000.0
 > 
+```
+
+
+2.	За допомогою download.file() завантажте файл getdata_data_ss06hid.csv за посиланням https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2Fss06hid.csv та завантажте дані в R. Code book, що пояснює значення змінних знаходиться за посиланням https://www.dropbox.com/s/dijv0rlwo4mryv5/PUMSDataDict06.pdf?dl=0  Необхідно знайти, скільки property мають value $1000000+
+
+```r
+> download.file("https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2Fss06hid.csv", destfile = "doc.csv")
+trying URL 'https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2Fss06hid.csv'
+Content type 'text/csv' length 4246554 bytes (4.0 MB)
+downloaded 4.0 MB
+> data <- read.csv("doc.csv")
+> values <- doc$VAL
+> res <- lapply(values, function(x) if (!is.na(x) && x==24) TRUE else NA)
+> length(res[!is.na(res)])
+[1] 53
+```
+
+3.	Зчитайте xml файл за посиланням http://d396qusza40orc.cloudfront.net/getdata%2Fdata%2Frestaurants.xml Скільки ресторанів мають zipcode 21231?
+```r
+> install.packages("XML")
+Устанавливаю пакет в ‘C:/Users/borys/OneDrive/Документи/R/win-library/3.4’
+(потому что ‘lib’ не определено)
+пробую URL 'https://cran.cnr.berkeley.edu/bin/windows/contrib/3.4/XML_3.98-1.10.zip'
+Content type 'application/zip' length 4325149 bytes (4.1 MB)
+downloaded 4.1 MB
+
+пакет ‘XML’ успешно распакован, MD5-суммы проверены
+
+Скачанные бинарные пакеты находятся в
+        C:\Users\borys\AppData\Local\Temp\Rtmpi8L6U9\downloaded_packages
+> library("XML")
+> 
+> library("XML")
+> url <- "http://d396qusza40orc.cloudfront.net/getdata%2Fdata%2Frestaurants.xml"
+> doc <- xmlTreeParse(url,useInternal=TRUE)
+> rootNode <- xmlRoot(doc)
+> length(xpathApply(rootNode, '//row/row/zipcode[text()="21231"]'))
+[1] 127
 ```
